@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/orderflow
+    username: orderflow
+    password: orderflow
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+orderflow:
+  jobs:
+    refund:
+      payment-gateway-base-url: http://app:8080
+

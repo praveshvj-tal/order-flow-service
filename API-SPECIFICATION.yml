@@ -1,0 +1,211 @@
+openapi: 3.0.3
+info:
+  title: Order Flow Service API
+  version: 1.0.0
+paths:
+  /orders:
+    post:
+      summary: Create Order
+      responses:
+        '201':
+          description: Created
+  /orders/{orderId}:
+    get:
+      summary: Get Order
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+  /orders/{orderId}/state:
+    put:
+      summary: Update Order State
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newState:
+                  type: string
+                  enum: [PENDING_PAYMENT, PAID, PROCESSING_IN_WAREHOUSE, SHIPPED, DELIVERED, CANCELLED]
+              required: [newState]
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request (illegal transition)
+        '404':
+          description: Not Found
+  /orders/{orderId}/cancel:
+    post:
+      summary: Cancel Order
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request (illegal transition)
+        '404':
+          description: Not Found
+  /orders/{orderId}/history:
+    get:
+      summary: Order State History
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+
+  /returns:
+    post:
+      summary: Initiate Return
+      parameters:
+        - in: query
+          name: orderId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request (order not delivered)
+  /returns/{returnId}:
+    get:
+      summary: Get Return Request
+      parameters:
+        - in: path
+          name: returnId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+  /returns/{returnId}/approve:
+    post:
+      summary: Approve Return
+      parameters:
+        - in: path
+          name: returnId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request (illegal transition)
+  /returns/{returnId}/reject:
+    post:
+      summary: Reject Return
+      parameters:
+        - in: path
+          name: returnId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request (illegal transition)
+  /returns/{returnId}/in-transit:
+    post:
+      summary: Mark Return In Transit
+      parameters:
+        - in: path
+          name: returnId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request (illegal transition)
+  /returns/{returnId}/received:
+    post:
+      summary: Mark Return Received
+      parameters:
+        - in: path
+          name: returnId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request (illegal transition)
+  /returns/{returnId}/complete:
+    post:
+      summary: Complete Return
+      parameters:
+        - in: path
+          name: returnId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request (illegal transition)
+  /returns/{returnId}/history:
+    get:
+      summary: Return State History
+      parameters:
+        - in: path
+          name: returnId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+
+  /mock-payment-gateway/refunds:
+    post:
+      summary: Mock Payment Gateway - Process Refund
+      responses:
+        '200':
+          description: OK
+
